@@ -83,6 +83,9 @@ I hope you enjoy your Neovim journey,
 
 P.S. You can delete this when you're done too. It's your config now! :)
 --]]
+--Disable netrw via the nvim-tree instructions:
+vim.g.loaded_netrw = 1
+vim.g.loaded_netrwPlugin = 1
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -665,6 +668,44 @@ require('lazy').setup({
     end,
   },
 
+  --My Plugins
+
+  --TREE FILE EXPLORER
+  {
+    'nvim-tree/nvim-tree.lua',
+    opts = {},
+    config = function()
+      require('nvim-tree').setup {
+        vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'File [E]xplorer' }),
+      }
+    end,
+  },
+
+  --AUTOCLOSE
+  {
+    'm4xshen/autoclose.nvim',
+    opts = {},
+    config = function()
+      require('autoclose').setup()
+    end,
+  },
+
+  -- DEBUGGER:
+  --
+  -- https://github.com/mfussenegger/nvim-dap?tab=readme-ov-file
+  -- To debug applications, you need to configure two things per language:
+  -- 1.  A debug adapter (|dap-adapter|).
+  -- 2.  How to launch your application to debug or how to attach to a running
+  --   application (|dap-configuration|).
+
+  -- {
+  --   'mfussenegger/nvim-dap',
+  --   opts = {},
+  --   config = function()
+  --     require('').setup()
+  --   end,
+  -- },
+  --
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
