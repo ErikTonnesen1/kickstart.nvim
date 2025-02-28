@@ -1,88 +1,3 @@
---[[
-
-=====================================================================
-==================== READ THIS BEFORE CONTINUING ====================
-=====================================================================
-========                                    .-----.          ========
-========         .----------------------.   | === |          ========
-========         |.-""""""""""""""""""-.|   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||   KICKSTART.NVIM   ||   |-----|          ========
-========         ||                    ||   | === |          ========
-========         ||                    ||   |-----|          ========
-========         ||:Tutor              ||   |:::::|          ========
-========         |'-..................-'|   |____o|          ========
-========         `"")----------------(""`   ___________      ========
-========        /::::::::::|  |::::::::::\  \ no mouse \     ========
-========       /:::========|  |==hjkl==:::\  \ required \    ========
-========      '""""""""""""'  '""""""""""""'  '""""""""""'   ========
-========                                                     ========
-=====================================================================
-=====================================================================
-
-What is Kickstart?
-
-  Kickstart.nvim is *not* a distribution.
-
-  Kickstart.nvim is a starting point for your own configuration.
-    The goal is that you can read every line of code, top-to-bottom, understand
-    what your configuration is doing, and modify it to suit your needs.
-
-    Once you've done that, you can start exploring, configuring and tinkering to
-    make Neovim your own! That might mean leaving Kickstart just the way it is for a while
-    or immediately breaking it into modular pieces. It's up to you!
-
-    If you don't know anything about Lua, I recommend taking some time to read through
-    a guide. One possible example which will only take 10-15 minutes:
-      - https://learnxinyminutes.com/docs/lua/
-
-    After understanding a bit more about Lua, you can use `:help lua-guide` as a
-    reference for how Neovim integrates Lua.
-    - :help lua-guide
-    - (or HTML version): https://neovim.io/doc/user/lua-guide.html
-
-Kickstart Guide:
-
-  TODO: The very first thing you should do is to run the command `:Tutor` in Neovim.
-
-    If you don't know what this means, type the following:
-      - <escape key>
-      - :
-      - Tutor
-      - <enter key>
-
-    (If you already know the Neovim basics, you can skip this step.)
-
-  Once you've completed that, you can continue working through **AND READING** the rest
-  of the kickstart init.lua.
-
-  Next, run AND READ `:help`.
-    This will open up a help window with some basic information
-    about reading, navigating and searching the builtin help documentation.
-
-    This should be the first place you go to look when you're stuck or confused
-    with something. It's one of my favorite Neovim features.
-
-    MOST IMPORTANTLY, we provide a keymap "<space>sh" to [s]earch the [h]elp documentation,
-    which is very useful when you're not exactly sure of what you're looking for.
-
-  I have left several `:help X` comments throughout the init.lua
-    These are hints about where to find more information about the relevant settings,
-    plugins or Neovim features used in Kickstart.
-
-   NOTE: Look for lines like this
-
-    Throughout the file. These are for you, the reader, to help you understand what is happening.
-    Feel free to delete them once you know what you're doing, but they should serve as a guide
-    for when you are first encountering a few different constructs in your Neovim config.
-
-If you experience any errors while trying to install kickstart, run `:checkhealth` for more info.
-
-I hope you enjoy your Neovim journey,
-- TJ
-
-P.S. You can delete this when you're done too. It's your config now! :)
---]]
 --Disable netrw via the nvim-tree instructions:
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
@@ -318,6 +233,7 @@ require('lazy').setup({
       -- Document existing key chains
       spec = {
         { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
+        { '<leader>b', group = '[B]ookmark', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
@@ -618,7 +534,7 @@ require('lazy').setup({
         --    https://github.com/pmizio/typescript-tools.nvim
         --
         -- But for many setups, the LSP (`ts_ls`) will work just fine
-        -- ts_ls = {},
+        ts_ls = {},
         --
 
         lua_ls = {
@@ -670,10 +586,121 @@ require('lazy').setup({
 
   --My Plugins
 
+  -- -- DEBUGGER
+  -- {
+  --   'mxsdev/nvim-dap-vscode-js',
+  --   dependencies = { 'mfussenegger/nvim-dap' },
+  --   config = function()
+  --     require('dap-vscode-js').setup {
+  --       node_path = 'node', -- Path of node executable. Defaults to $NODE_PATH, and then "node"
+  --       debugger_path = '~/dev/debugger/js/vscode-js-debug/', -- Path to vscode-js-debug installation.
+  --       debugger_cmd = { 'js-debug-adapter' }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+  --       adapters = { 'pwa-node', 'pwa-chrome', 'pwa-msedge', 'node-terminal', 'pwa-extensionHost' }, -- which adapters to register in nvim-dap
+  --       log_file_path = '~/dev/debugger/js/vscode-js-logs/', -- Path for file logging
+  --       log_file_level = 1, -- Logging level for output to file. Set to false to disable file logging.
+  --       log_console_level = vim.log.levels.ERROR, -- Logging level for output to console. Set to false to disable console output.
+  --     }
+  --
+  --     for _, language in ipairs { 'typescript', 'javascript' } do
+  --       require('dap').configurations[language] = {
+  --         -- {
+  --         --   {
+  --         --     type = 'pwa-node',
+  --         --     request = 'launch',
+  --         --     name = 'Launch file',
+  --         --     program = '${file}',
+  --         --     cwd = '${workspaceFolder}',
+  --         --   },
+  --         --   {
+  --         --     type = 'pwa-node',
+  --         --     request = 'attach',
+  --         --     name = 'Attach',
+  --         --     processId = require('dap.utils').pick_process,
+  --         --     cwd = '${workspaceFolder}',
+  --         --   },
+  --         -- },
+  --         {
+  --           -- Not sure if this is right
+  --           type = 'pwa-node',
+  --           request = 'launch',
+  --           name = 'Debug Mocha Tests',
+  --           {
+  --             -- trace = true, -- include debugger info
+  --             runtimeExecutable = 'node',
+  --             runtimeArgs = {
+  --               './node_modules/mocha/bin/mocha.js',
+  --             },
+  --             rootPath = '${workspaceFolder}',
+  --             cwd = '${workspaceFolder}',
+  --             console = 'integratedTerminal',
+  --             internalConsoleOptions = 'neverOpen',
+  --           },
+  --         },
+  --       }
+  --     end
+  --   end,
+  -- },
+
+  -- -- LUALINE
+  {
+    'nvim-lualine/lualine.nvim',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    config = function()
+      local options = { theme = 'gruvbox' }
+      require('lualine').setup { options }
+    end,
+  },
+
+  -- BOOKMARK LINE
+  {
+    'LintaoAmons/bookmarks.nvim',
+    dependencies = {
+      { 'kkharji/sqlite.lua' },
+      { 'nvim-telescope/telescope.nvim' },
+      { 'stevearc/dressing.nvim' }, -- optional: better UI
+    },
+
+    -- -- default keybindings in the treeview buffer
+    -- keymap = {
+    --   quit = { "q", "<ESC>" },      -- Close the tree view window and return to previous window
+    --   refresh = "R",                -- Reload and redraw the tree view
+    --   create_list = "a",            -- Create a new list under the current node
+    --   level_up = "u",               -- Navigate up one level in the tree hierarchy
+    --   set_root = ".",               -- Set current list as root of the tree view, also set as active list
+    --   set_active = "m",             -- Set current list as the active list for bookmarks
+    --   toggle = "o",                 -- Toggle list expansion or go to bookmark location
+    --   move_up = "<localleader>k",   -- Move current node up in the list
+    --   move_down = "<localleader>j", -- Move current node down in the list
+    --   delete = "D",                 -- Delete current node
+    --   rename = "r",                 -- Rename current node
+    --   goto = "g",                   -- Go to bookmark location in previous window
+    --   cut = "x",                    -- Cut node
+    --   copy = "c",                   -- Copy node
+    --   paste = "p",                  -- Paste node
+    --   show_info = "i",              -- Show node info
+    --   reverse = "t",                -- Reverse the order of nodes in the tree view
+    -- }
+    --
+
+    config = function()
+      local opts = {}
+      require('bookmarks').setup(opts)
+      vim.keymap.set('n', '<leader>B', ':BookmarksTree<CR>', { desc = '[B]ookmark Tree Toggle' })
+      vim.keymap.set('n', '<leader>bs', ':BookmarksMark<CR>', { desc = '[S]et Bookmark' })
+    end,
+  },
+
+  --FLOATING TERMINAL
+  {
+    'numToStr/FTerm.nvim',
+    vim.keymap.set('n', '<leader>T', '<CMD>lua require("FTerm").toggle()<CR>', { desc = '[T]erminal' }),
+    vim.keymap.set('t', '<leader>T', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>'),
+  },
   --TREE FILE EXPLORER
   {
     'nvim-tree/nvim-tree.lua',
     opts = {},
+
     config = function()
       require('nvim-tree').setup {
         vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'File [E]xplorer' }),
@@ -691,21 +718,8 @@ require('lazy').setup({
   },
 
   -- DEBUGGER:
-  --
-  -- https://github.com/mfussenegger/nvim-dap?tab=readme-ov-file
-  -- To debug applications, you need to configure two things per language:
-  -- 1.  A debug adapter (|dap-adapter|).
-  -- 2.  How to launch your application to debug or how to attach to a running
-  --   application (|dap-configuration|).
+  { 'mfussenegger/nvim-jdtls' },
 
-  -- {
-  --   'mfussenegger/nvim-dap',
-  --   opts = {},
-  --   config = function()
-  --     require('').setup()
-  --   end,
-  -- },
-  --
   { -- Autoformat
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
@@ -744,7 +758,7 @@ require('lazy').setup({
         -- python = { "isort", "black" },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
-        -- javascript = { "prettierd", "prettier", stop_after_first = true },
+        javascript = { 'prettierd', 'prettier', stop_after_first = true },
       },
     },
   },
@@ -869,14 +883,21 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'bettervim/yugen.nvim',
+    -- 'bettervim/yugen.nvim',
+    'marko-cerovac/material.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
+    config = function()
+      require('material').setup {
+        disable = {
+          background = true,
+        },
+      }
+    end,
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'yugen'
-
+      vim.cmd.colorscheme 'material-palenight'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
@@ -927,7 +948,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc', 'java', 'javascript' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -935,7 +956,7 @@ require('lazy').setup({
         -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
         --  If you are experiencing weird indenting issues, add the language to
         --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
+        additional_vim_regex_highlighting = { 'ruby', 'yaml' },
       },
       indent = { enable = true, disable = { 'ruby' } },
     },
