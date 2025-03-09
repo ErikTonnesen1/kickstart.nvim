@@ -357,6 +357,17 @@ require('lazy').setup({
   },
 
   -- LSP Plugins
+  { --NVIM_FLUTTER
+    'nvim-flutter/flutter-tools.nvim',
+    lazy = false,
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+      'stevearc/dressing.nvim', -- optional for vim.ui.select
+    },
+    config = function()
+      require('flutter-tools').setup {} -- use defaults
+    end,
+  },
   {
     -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
     -- used for completion, annotations and signatures of Neovim apis
@@ -641,6 +652,17 @@ require('lazy').setup({
   --   end,
   -- },
 
+  --MARKDOWN FILES
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.nvim' }, -- if you use the mini.nvim suite
+    -- dependencies = { 'nvim-treesitter/nvim-treesitter', 'echasnovski/mini.icons' }, -- if you use standalone mini plugins
+    dependencies = { 'nvim-treesitter/nvim-treesitter', 'nvim-tree/nvim-web-devicons' }, -- if you prefer nvim-web-devicons
+    ---@module 'render-markdown'
+    ---@type render.md.UserConfig
+    opts = {},
+  },
+
   -- -- LUALINE
   {
     'nvim-lualine/lualine.nvim',
@@ -888,16 +910,16 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
       require('material').setup {
-        disable = {
-          background = true,
-        },
+        -- disable = {
+        --   background = true,
+        -- },
       }
     end,
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'material-palenight'
+      vim.cmd.colorscheme 'material-deep-ocean'
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
     end,
