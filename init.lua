@@ -83,7 +83,14 @@ vim.opt.scrolloff = 10
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
 
 -- Diagnostic keymaps
-vim.keymap.set('n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>Q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' })
+vim.keymap.set('n', '<leader>q', vim.diagnostic.open_float, { desc = 'Open diagnostic [q] - for long msg' })
+
+--Move lines mf
+-- vim.keymap.set('n', '<A-j>', ':m .+1<CR>==')
+-- vim.keymap.set('n', '<A-k>', ':m .-2<CR>==')
+vim.keymap.set('n', '<C-A-j>', ':m .-2<CR>==', { noremap = true, silent = true })
+vim.keymap.set('n', '<C-A-k>', ':m .+1<CR>==', { noremap = true, silent = true })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -652,6 +659,58 @@ require('lazy').setup({
   --   end,
   -- },
 
+  --OIL VIM FILE MANAGER
+  -- https://github.com/stevearc/oil.nvim
+  -- {
+  --   'stevearc/oil.nvim',
+  --   config = function()
+  --     require('oil').setup {
+  --       use_default_keymaps = false,
+  --       vim.keymap.set('n', '<leader>m', '', { desc = 'Directory [M]anagement' }),
+  --     }
+  --   end,
+  -- },
+  --
+  --
+  --ChatGPT
+  --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
+  -- Lazy
+  {
+    'jackMort/ChatGPT.nvim',
+    event = 'VeryLazy',
+    config = function()
+      require('chatgpt').setup {
+        -- this config assumes you have OPENAI_API_KEY environment variable set
+        api_key_cmd = 'echo $OPENAI_API_KEY',
+        openai_params = {
+          -- NOTE: model can be a function returning the model name
+          -- this is useful if you want to change the model on the fly
+          -- using commands
+          -- Example:
+          -- model = function()
+          --     if some_condition() then
+          --         return "gpt-4-1106-preview"
+          --     else
+          --         return "gpt-3.5-turbo"
+          --     end
+          -- end,
+          model = 'gpt-3.5-turbo',
+          frequency_penalty = 0,
+          presence_penalty = 0,
+          max_tokens = 4095,
+          temperature = 0.2,
+          top_p = 0.1,
+          n = 1,
+        },
+      }
+    end,
+    dependencies = {
+      'MunifTanjim/nui.nvim',
+      'nvim-lua/plenary.nvim',
+      'folke/trouble.nvim', -- optional
+      'nvim-telescope/telescope.nvim',
+    },
+  },
   --MARKDOWN FILES
   {
     'MeanderingProgrammer/render-markdown.nvim',
@@ -668,8 +727,12 @@ require('lazy').setup({
     'nvim-lualine/lualine.nvim',
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
-      local options = { theme = 'gruvbox' }
-      require('lualine').setup { options }
+      require('lualine').setup {
+        options = { theme = 'gruvbox' },
+        sections = {
+          lualine_a = { { 'filename', path = 1 } },
+        },
+      }
     end,
   },
 
@@ -726,6 +789,9 @@ require('lazy').setup({
     config = function()
       require('nvim-tree').setup {
         vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'File [E]xplorer' }),
+        view = {
+          width = 60,
+        },
       }
     end,
   },
