@@ -1,6 +1,6 @@
---Disable netrw via the nvim-tree instructions:
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
+--Disable netrw via the nvim-tree instructions:
 
 -- Set <space> as the leader key
 -- See `:help mapleader`
@@ -87,10 +87,11 @@ vim.keymap.set('n', '<leader>Q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.open_float, { desc = 'Open diagnostic [q] - for long msg' })
 
 --Move lines mf
--- vim.keymap.set('n', '<A-j>', ':m .+1<CR>==')
--- vim.keymap.set('n', '<A-k>', ':m .-2<CR>==')
 vim.keymap.set('n', '<C-A-j>', ':m .-2<CR>==', { noremap = true, silent = true })
 vim.keymap.set('n', '<C-A-k>', ':m .+1<CR>==', { noremap = true, silent = true })
+
+vim.keymap.set('v', '<C-A-j>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set('v', '<C-A-k>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
@@ -605,6 +606,111 @@ require('lazy').setup({
   --My Plugins
 
   -- -- DEBUGGER
+  {
+    'mfussenegger/nvim-dap',
+    dependencies = {
+      'rcarriga/nvim-dap-ui',
+      'nvim-neotest/nvim-nio',
+      'leoluz/nvim-dap-go',
+      'mxsdev/nvim-dap-vscode-js',
+    },
+    config = function()
+      local dap = require 'dap'
+      local dapui = require 'dapui'
+
+      require('dap-go').setup()
+      require('dapui').setup()
+      require('dap-vscode-js').setup {
+        node_path = 'node',
+        debugger_path = '/Users/eriktonnesen/dev/debugger/js/vscode-js-debug', -- Path to vscode-js-debug installation.
+        debugger_cmd = { 'js-debug-adapter' }, -- Command to use to launch the debug server. Takes precedence over `node_path` and `debugger_path`.
+        args = { '$port' },
+        adapters = { 'pwa-node' }, -- which adapters to register in nvim-dap
+        log_file_path = '(stdpath cache)/dap_vscode_js.log', -- Path for file logging
+        log_file_level = false, -- Logging level for output to file. Set to false to disable file logging.
+        log_console_level = vim.log.levels.ERROR, -- Logging level for output to console. Set to false to disable console output.
+      }
+
+      for _, language in ipairs { 'typescript', 'javascript' } do
+        require('dap').configurations[language] = {
+          { -- JS DEBUGGGER
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Launch file',
+            program = '${file}',
+            cwd = '${workspaceFolder}',
+          },
+          {
+            type = 'pwa-node',
+            request = 'attach',
+            name = 'Attach',
+            processId = require('dap.utils').pick_process,
+            cwd = '${workspaceFolder}',
+          },
+          { -- MOCHA TESTS
+            type = 'pwa-node',
+            request = 'launch',
+            name = 'Debug Mocha Tests',
+            -- trace = true, -- include debugger info
+            runtimeExecutable = 'node',
+            runtimeArgs = {
+              './node_modules/mocha/bin/mocha.js',
+            },
+            rootPath = '${workspaceFolder}',
+            cwd = '${workspaceFolder}',
+            console = 'integratedTerminal',
+            internalConsoleOptions = 'neverOpen',
+          },
+        }
+      end
+
+      -- --TYPESCRIPT
+      -- dap.adapters['pwa-node'] = {
+      --   type = 'server',
+      --   host = 'localhost',
+      --   port = '${port}',
+      --   executable = {
+      --     command = 'node',
+      --     args = { '/Users/eriktonnesen/dev/debugger/js/vscode-js-debug/src/dapDebugServer.ts', '${port}' },
+      --   },
+      -- }
+      --
+      -- dap.configurations.typescript = {
+      --   {
+      --     type = 'pwa-node',
+      --     request = 'launch',
+      --     name = 'Launch file',
+      --     runtimeExecutable = 'node',
+      --     runtimeArgs = {
+      --       'run',
+      --       '--inspect-wait',
+      --       '--allow-all',
+      --     },
+      --     program = '${file}',
+      --     cwd = '${workspaceFolder}',
+      --     attachSimplePort = 9229,
+      --   },
+      -- }
+      -- --END TYPESCRIPT
+
+      dap.listeners.before.attach.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.launch.dapui_config = function()
+        dapui.open()
+      end
+      dap.listeners.before.event_terminated.dapui_config = function()
+        dapui.close()
+      end
+      dap.listeners.before.event_exited.dapui_config = function()
+        dapui.close()
+      end
+
+      vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'DEBUGGER: [S]et Breakpoint' })
+      vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'DEBUGGER: [C]ontinue' })
+    end,
+  },
+
   -- {
   --   'mxsdev/nvim-dap-vscode-js',
   --   dependencies = { 'mfussenegger/nvim-dap' },
@@ -666,12 +772,31 @@ require('lazy').setup({
   --   config = function()
   --     require('oil').setup {
   --       use_default_keymaps = false,
-  --       vim.keymap.set('n', '<leader>m', '', { desc = 'Directory [M]anagement' }),
+  --       vim.keymap.set('n', '<leader>m', '<CMD>:Oil --float<CR>', { desc = 'Directory [M]anagement' }),
   --     }
   --   end,
   -- },
-  --
-  --
+
+  -- TMUX / NVIM
+  {
+    'christoomey/vim-tmux-navigator',
+    cmd = {
+      'TmuxNavigateLeft',
+      'TmuxNavigateDown',
+      'TmuxNavigateUp',
+      'TmuxNavigateRight',
+      'TmuxNavigatePrevious',
+      'TmuxNavigatorProcessList',
+    },
+    keys = {
+      { '<c-h>', '<cmd><C-U>TmuxNavigateLeft<cr>' },
+      { '<c-j>', '<cmd><C-U>TmuxNavigateDown<cr>' },
+      { '<c-k>', '<cmd><C-U>TmuxNavigateUp<cr>' },
+      { '<c-l>', '<cmd><C-U>TmuxNavigateRight<cr>' },
+      { '<c-\\>', '<cmd><C-U>TmuxNavigatePrevious<cr>' },
+    },
+  },
+
   --ChatGPT
   --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
   -- Lazy
