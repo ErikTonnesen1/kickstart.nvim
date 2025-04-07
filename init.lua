@@ -247,7 +247,8 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>h', group = '[H]arpoon' },
+        -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
   },
@@ -597,6 +598,15 @@ require('lazy').setup({
             -- certain features of an LSP (for example, turning off formatting for ts_ls)
             server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
             require('lspconfig')[server_name].setup(server)
+            -- require('lspconfig').ts_ls.setup {
+            --   initoptions = {
+            --     preferences = {
+            --       -- other preferences...
+            --       importModuleSpecifierPreference = 'relative',
+            --       importModuleSpecifierEnding = 'minimal',
+            --     },
+            --   },
+            -- }
           end,
         },
       }
@@ -604,6 +614,28 @@ require('lazy').setup({
   },
 
   --My Plugins
+
+  --HARPOON
+  {
+    'ThePrimeagen/harpoon',
+    dependencies = {
+      'nvim-lua/plenary.nvim',
+    },
+    config = function()
+      local harpoonui = require 'harpoon.ui'
+      -- local harpoon = require 'harpoon.mark'
+      require('harpoon').setup {
+        vim.keymap.set('n', '<leader>hm', ":lua require('harpoon.mark').add_file()<CR>", { desc = 'Harpoon [M]ark' }),
+        vim.keymap.set('n', '<leader>hf', ":lua require('harpoon.ui').toggle_quick_menu()<CR>", { desc = 'Harpoon [F]ind in Buffer' }),
+        vim.keymap.set('n', '<leader>h1', ":lua require('harpoon.ui').nav_file(1)<CR>", { desc = 'Harpoon to File: [1]' }),
+        vim.keymap.set('n', '<leader>h2', ":lua require('harpoon.ui').nav_file(2)<CR>", { desc = 'Harpoon to File: [2]' }),
+        vim.keymap.set('n', '<leader>h3', ":lua require('harpoon.ui').nav_file(3)<CR>", { desc = 'Harpoon to File: [3]' }),
+        vim.keymap.set('n', '<leader>h4', ":lua require('harpoon.ui').nav_file(4)<CR>", { desc = 'Harpoon to File: [4]' }),
+        vim.keymap.set('n', '<leader>hn', ":lua require('harpoon.ui').nav_next()<CR>", { desc = 'Harpoon [N]ext' }),
+        vim.keymap.set('n', '<leader>hp', ":lua require('harpoon.ui').nav_prev()<CR>", { desc = 'Harpoon [P]revious' }),
+      }
+    end,
+  },
 
   --LUAP SNIP
   -- github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
