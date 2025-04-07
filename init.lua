@@ -605,6 +605,41 @@ require('lazy').setup({
 
   --My Plugins
 
+  --LUAP SNIP
+  -- github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
+  {
+    'L3MON4D3/LuaSnip',
+    dependencies = {
+      'saadparwaiz1/cmp_luasnip',
+      'rafamadriz/friendly-snippets',
+    },
+
+    build = 'make install_jsregexp',
+    config = function()
+      local luasnip = require 'luasnip'
+      -- local types = require 'luasnip.util.types'
+      luasnip.setup {
+        ext_base_prio = 300,
+        update_events = { 'TextChanged', 'TextChangedI' },
+        enable_autosnippets = true,
+        delete_check_events = { 'InsertLeave' },
+        -- how virtual text hints for node types
+        -- ext_opts = {
+        --   [types.insertNode] = {
+        --     active = {
+        --       virt_text = { { "●", "Operator" } },
+        --     },
+        --   },
+        --   [types.choiceNode] = {
+        --     active = {
+        --       virt_text = { { "●", "Constant" } },
+        --     },
+        --   },
+        -- },
+      }
+    end,
+  },
+
   -- -- DEBUGGER
   {
     'mfussenegger/nvim-dap',
@@ -771,12 +806,12 @@ require('lazy').setup({
   --   'stevearc/oil.nvim',
   --   config = function()
   --     require('oil').setup {
-  --       use_default_keymaps = false,
-  --       vim.keymap.set('n', '<leader>m', '<CMD>:Oil --float<CR>', { desc = 'Directory [M]anagement' }),
+  --       -- use_default_keymaps = false,
+  --       vim.keymap.set('n', '<leader>m', '<CMD>:Oil<CR>', { desc = 'Directory [M]anagement' }),
   --     }
   --   end,
   -- },
-
+  --
   -- TMUX / NVIM
   {
     'christoomey/vim-tmux-navigator',
@@ -1012,17 +1047,24 @@ require('lazy').setup({
       'hrsh7th/cmp-nvim-lsp',
       'hrsh7th/cmp-path',
     },
+
     config = function()
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
 
+      require('luasnip.loaders.from_lua').lazy_load {
+        -- paths = { "./lua/user/snippets-lua" },
+        paths = { '~/.config/nvim/snippets' },
+      }
+
       cmp.setup {
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
           end,
+          luasnip.filetype_extend('typescript', { 'javascript' }),
         },
         completion = { completeopt = 'menu,menuone,noinsert' },
 
