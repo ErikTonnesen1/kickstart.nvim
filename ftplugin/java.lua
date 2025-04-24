@@ -1,0 +1,130 @@
+local config = {
+  cmd = { vim.fn.expand '~/.local/share/nvim/mason/bin/jdtls' },
+  root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
+}
+require('jdtls').start_or_attach(config)
+
+-- {
+--   config = function()
+--     local dap, ui = require 'dap', require 'dapui'
+--     require('dapui').setup()
+--     -- require("").setup() <- input java debugger here
+--
+--     --debugger installation and setup
+--
+--     --JAVASCRIPT
+--     require('dap').adapters['pwa-node'] = {
+--       type = 'server',
+--       host = 'localhost',
+--       port = '${port}',
+--       executable = { command = 'node', args = { '/Users/eriktonnesen/Documents/debugger/js/vscode-js-debug', '${port}' } },
+--     }
+--     require('dap').configurations.typescript = {
+--       {
+--         type = 'pwa-node',
+--         request = 'launch',
+--         name = 'Launch file',
+--         program = '${file}',
+--         cwd = '${workspaceFolder}',
+--         sourceMaps = true,
+--         resolveSourceMapLocations = {
+--           '${workspaceFolder}/dist/**/*.js',
+--           '${workspaceFolder}/src/**/*.ts',
+--         },
+--       },
+--     }
+--
+--     local config = {
+--       cmd = {
+--         'java', --java in $PATH
+--
+--         '-Declipse.application=org.eclipse.jdt.ls.core.id1',
+--         '-Dosgi.bundles.defaultStartLevel=4',
+--         '-Declipse.product=org.eclipse.jdt.ls.core.product',
+--         '-Dlog.protocol=true',
+--         '-Dlog.level=ALL',
+--         '-Xmx1g',
+--         '--add-modules=ALL-SYSTEM',
+--         '--add-opens',
+--         'java.base/java.util=ALL-UNNAMED',
+--         '--add-opens',
+--         'java.base/java.lang=ALL-UNNAMED', -- ~/.local/share/nvim/mason/bin
+--         '-jar',
+--         '/path/to/jdtls_install_location/plugins/org.eclipse.equinox.launcher_VERSION_NUMBER.jar',
+--       },
+--       root_dir = vim.fs.dirname(vim.fs.find({ 'gradlew', '.git', 'mvnw' }, { upward = true })[1]),
+--     }
+--     require('jdtls').start_or_attach(config)
+--
+--     -- require('dap').adapters['jdtls'] = {
+--     --   type = 'server',
+--     --   host = 'localhost',
+--     --   port = '${port}',
+--     --   executable = {
+--     --     command = 'java',
+--     --     args = { '/Users/eriktonnesen/Dev/debugger/java/vscode-java-debug', '${port}' },
+--     --   },
+--     -- }
+--     --
+--     -- dap.adapters.java = function(callback, config)
+--     --   M.execute_command({ command = 'vscode.java.startDebugSession' }, function(err0, port)
+--     --     assert(not err0, vim.inspect(err0))
+--     --     callback { type = 'server', host = '127.0.0.1', port = port }
+--     --   end)
+--     -- end
+--     --
+--     -- require('dap').configurations.java = {
+--     --   type = 'jdtls',
+--     --   request = 'launch',
+--     --   name = 'Launch Java Program',
+--     --   mainClass = '${file}',
+--     --   cwd = '${workspaceFolder}',
+--     --   classPaths = { './bin' },
+--     --   javaExec = 'java',
+--     -- }
+--     --
+--     --JAVASCRIPT END
+--
+--     -- JAVA
+--     --
+--     -- JAVA END
+--     --
+--     -- require('dap').adapters['jdtls'] = {
+--     --   type = 'server',
+--     --   host = '127.0.0.1',
+--     --   port = '${port}',
+--     -- }
+--     --
+--     --1. run the debugger
+--     --2. attach dap to debugger
+--
+--     --keymap
+--     vim.keymap.set('n', '<leader>db', dap.toggle_breakpoint, { desc = 'Set [B]reakpoint' })
+--     vim.keymap.set('n', '<space>dr', dap.run_to_cursor, { desc = '[R]un to Cursor' })
+--
+--     -- Eval var under cursor
+--     -- vim.keymap.set("n", "<space>?", function()
+--     --   require("dapui").eval(nil, { enter = true })
+--     -- end)
+--
+--     vim.keymap.set('n', '<leader>dc', dap.continue, { desc = 'Debug: [C]ontinue' })
+--     vim.keymap.set('n', '<leader>di', dap.step_into, { desc = 'Debug: Step [I]nto' })
+--     vim.keymap.set('n', '<leader>do', dap.step_over, { desc = 'Debug: Step [o]ver' })
+--     vim.keymap.set('n', '<leader>dO', dap.step_out, { desc = 'Debug: Step [O]ut' })
+--     vim.keymap.set('n', '<leader>db', dap.step_back, { desc = 'Debug: Step [b]ack' })
+--     vim.keymap.set('n', '<leader>dx', dap.restart, { desc = 'Debug: [x] to Restart' })
+--
+--     dap.listeners.before.attach.dapui_config = function()
+--       ui.open()
+--     end
+--     dap.listeners.before.launch.dapui_config = function()
+--       ui.open()
+--     end
+--     dap.listeners.before.event_terminated.dapui_config = function()
+--       ui.close()
+--     end
+--     dap.listeners.before.event_exited.dapui_config = function()
+--       ui.close()
+--     end
+--   end,
+-- },

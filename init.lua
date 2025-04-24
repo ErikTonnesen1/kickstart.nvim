@@ -248,6 +248,7 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = '[H]arpoon' },
+        { '<leader>z', group = '[Z] - Toggle stuff' },
         -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
@@ -615,6 +616,24 @@ require('lazy').setup({
 
   --My Plugins
 
+  -- QUICK FIX
+  {
+    'kevinhwang91/nvim-bqf',
+  },
+
+  --CENTERED NVIM
+  {
+    'arnamak/stay-centered.nvim',
+    lazy = false,
+    enabled = true,
+    opts = {
+      skip_filetypes = {},
+    },
+    config = function()
+      vim.keymap.set({ 'n', 'v' }, '<leader>zc', require('stay-centered').toggle, { desc = '[C]entered-Nvim: Toggle (stay-centered.nvim)' })
+    end,
+  },
+
   --HARPOON
   {
     'ThePrimeagen/harpoon',
@@ -631,6 +650,7 @@ require('lazy').setup({
         vim.keymap.set('n', '<leader>h2', ":lua require('harpoon.ui').nav_file(2)<CR>", { desc = 'Harpoon to File: [2]' }),
         vim.keymap.set('n', '<leader>h3', ":lua require('harpoon.ui').nav_file(3)<CR>", { desc = 'Harpoon to File: [3]' }),
         vim.keymap.set('n', '<leader>h4', ":lua require('harpoon.ui').nav_file(4)<CR>", { desc = 'Harpoon to File: [4]' }),
+        vim.keymap.set('n', '<leader>h5', ":lua require('harpoon.ui').nav_file(5)<CR>", { desc = 'Harpoon to File: [5]' }),
         vim.keymap.set('n', '<leader>hn', ":lua require('harpoon.ui').nav_next()<CR>", { desc = 'Harpoon [N]ext' }),
         vim.keymap.set('n', '<leader>hp', ":lua require('harpoon.ui').nav_prev()<CR>", { desc = 'Harpoon [P]revious' }),
       }
@@ -638,6 +658,7 @@ require('lazy').setup({
   },
 
   --LUAP SNIP
+  --creating snippets: https://github.com/L3MON4D3/LuaSnip/blob/master/DOC.md
   -- github.com/L3MON4D3/LuaSnip/blob/master/Examples/snippets.lua
   {
     'L3MON4D3/LuaSnip',
@@ -998,7 +1019,9 @@ require('lazy').setup({
   },
 
   -- DEBUGGER:
-  { 'mfussenegger/nvim-jdtls' },
+  { 'mfussenegger/nvim-jdtls', dependencies = {
+    'mfussenegger/nvim-dap',
+  } },
 
   { -- Autoformat
     'stevearc/conform.nvim',
@@ -1084,7 +1107,6 @@ require('lazy').setup({
       -- See `:help cmp`
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
-      luasnip.config.setup {}
 
       require('luasnip.loaders.from_lua').lazy_load {
         -- paths = { "./lua/user/snippets-lua" },

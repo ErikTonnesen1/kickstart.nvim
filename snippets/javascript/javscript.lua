@@ -18,11 +18,60 @@ return {
 
   s(
     'nlog',
-    fmt([[console.log('{}: ', {})]], {
+    fmt([[console.log('{}: ', {});]], {
       f(function(input)
         return input[1][1]:gsub('[\'"]', '\\%1')
       end, { 1 }),
       i(1),
     })
+  ),
+
+  --Snippet:
+  --
+  --describe("<insert here>", async () => {
+  --  //Given
+  --
+  --  //When
+  --
+  --  //Then
+  --
+  --}")
+  --
+  -- LOOK AT LATER (MAGIC)
+  -- s(
+  --   'ntest',
+  --   fmt(
+  --     [[
+  --   describe("{}", async() => {{)
+  --     it("{}", async() => {{
+  --       //Given
+  --       {e}
+  --       //When
+  --       {}
+  --       //Then
+  --     }});
+  --   }};
+  --   ]],
+  --     {
+  --       e = i(0),
+  --       i(1),
+  --       i(2),
+  --       i(3),
+  --     }
+  --   )
+  -- ),
+  s(
+    'ntest',
+    fmt(
+      [[it("{}", async() => {{
+        //Given
+        //When
+        //Then
+}});
+    ]],
+      {
+        i(1),
+      }
+    )
   ),
 }
