@@ -93,6 +93,9 @@ vim.keymap.set('n', '<C-A-k>', ':m .+1<CR>==', { noremap = true, silent = true }
 vim.keymap.set('v', '<C-A-j>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
 vim.keymap.set('v', '<C-A-k>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 
+-- Open current html file in browser
+vim.keymap.set('n', '<leader>zz', ":lua vim.ui.open(vim.fn.expand('%'))<CR>", { desc = '[z] Open Current HTML file in browser' })
+
 -- Exit terminal mode in the builtin terminal with a shortcut that is a bit easier
 -- for people to discover. Otherwise, you normally need to press <C-\><C-n>, which
 -- is not what someone will guess without a bit more experience.
@@ -248,7 +251,7 @@ require('lazy').setup({
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
         { '<leader>h', group = '[H]arpoon' },
-        { '<leader>z', group = '[Z] - Toggle stuff' },
+        { '<leader>z', group = '[z] - Etc' },
         -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
     },
