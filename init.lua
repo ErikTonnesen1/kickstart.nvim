@@ -243,14 +243,15 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>b', group = '[B]ookmark', mode = { 'n', 'x' } },
+        { '<leader>c', group = '[C]ode', mode = { 'n', 'x' } },
         { '<leader>d', group = '[D]ocument' },
+        { '<leader>g', group = '[G]it' },
+        { '<leader>h', group = '[H]arpoon' },
         { '<leader>r', group = '[R]ename' },
         { '<leader>s', group = '[S]earch' },
-        { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = '[H]arpoon' },
+        { '<leader>w', group = '[W]orkspace' },
         { '<leader>z', group = '[z] - Etc' },
         -- { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       },
@@ -619,6 +620,32 @@ require('lazy').setup({
 
   --My Plugins
 
+  --GIT BLAME
+  {
+    'FabijanZulj/blame.nvim',
+    lazy = false,
+    config = function()
+      require('blame').setup()
+      vim.keymap.set('n', '<leader>gg', ':BlameToggle virtual<CR>', { desc = '[G]it Blame Virtual' })
+      vim.keymap.set('n', '<leader>gb', ':BlameToggle<CR>', { desc = 'Git [B]lame' })
+    end,
+    opts = {
+      blame_options = { '-v' },
+    },
+  },
+
+  -- ZEN MODE
+  {
+    'folke/zen-mode.nvim',
+    opts = {
+      -- your configuration comes here
+      -- or leave it empty to use the default settings
+      -- refer to the configuration section below
+    },
+    config = function()
+      vim.keymap.set('n', '<leader>ze', ':ZenMode<CR>', { desc = 'Z[E]N Mode Toggle' })
+    end,
+  },
   -- QUICK FIX
   {
     'kevinhwang91/nvim-bqf',
@@ -1196,21 +1223,41 @@ require('lazy').setup({
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
     -- 'bettervim/yugen.nvim',
-    'marko-cerovac/material.nvim',
+    'dasupradyumna/midnight.nvim',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     config = function()
-      require('material').setup {
-        -- disable = {
-        --   background = true,
-        -- },
-      }
+      -- require('oxocarbon').setup {
+      -- disable = {
+      --   background = true,
+      -- },
+      -- }
     end,
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'material-deep-ocean'
-      -- You can configure highlights by doing something like:
+      vim.cmd.colorscheme 'sorbet' --auto-loaded colorscheme from telescope
+
+      -- Override Comment color
+      vim.api.nvim_set_hl(0, 'Comment', { fg = '#ffffff', italic = true }) -- You can configure highlights by doing something like:
+
+      -- Set a bright yellow background for search results
+      vim.api.nvim_set_hl(0, 'Search', { bg = '#ffff00', fg = '#000000' })
+
+      -- Make visual selection have a blue background
+      vim.api.nvim_set_hl(0, 'Visual', { bg = '#285577' })
+
+      -- Highlight errors in red
+      vim.api.nvim_set_hl(0, 'DiagnosticError', { fg = '#ff0000' })
+
+      -- Fix Which-key highlighting
+      vim.api.nvim_set_hl(0, 'WhichKey', { fg = '#ff9e64', bold = true })
+      vim.api.nvim_set_hl(0, 'WhichKeyFloat', { bg = '#1e1e2e' })
+      vim.api.nvim_set_hl(0, 'WhichKeyBorder', { fg = '#7aa2f7', bg = '#1e1e2e' })
+      vim.api.nvim_set_hl(0, 'WhichKeyNormal', { bg = '#1e1e2e', fg = '#c0caf5' }) -- adjust as needed
+      vim.api.nvim_set_hl(0, 'Pmenu', { bg = '#1e1e2e', fg = '#c0caf5' })
+
+      -- NvimTreeNormalFloatBorder
       vim.cmd.hi 'Comment gui=none'
     end,
   },
