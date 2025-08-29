@@ -87,11 +87,11 @@ vim.keymap.set('n', '<leader>Q', vim.diagnostic.setloclist, { desc = 'Open diagn
 vim.keymap.set('n', '<leader>q', vim.diagnostic.open_float, { desc = 'Open diagnostic [q] - for long msg' })
 
 --Move lines mf
-vim.keymap.set('n', '<C-A-j>', ':m .-2<CR>==', { noremap = true, silent = true })
-vim.keymap.set('n', '<C-A-k>', ':m .+1<CR>==', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<C-A-k>', ':m .-2<CR>==', { noremap = true, silent = true })
+-- vim.keymap.set('n', '<C-A-j>', ':m .+1<CR>==', { noremap = true, silent = true })
 
-vim.keymap.set('v', '<C-A-j>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
-vim.keymap.set('v', '<C-A-k>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set('v', '<C-A-k>', ":m '<-2<CR>gv=gv", { noremap = true, silent = true })
+vim.keymap.set('v', '<C-A-j>', ":m '>+1<CR>gv=gv", { noremap = true, silent = true })
 
 -- Open current html file in browser
 vim.keymap.set('n', '<leader>zz', ":lua vim.ui.open(vim.fn.expand('%'))<CR>", { desc = '[z] Open Current HTML file in browser' })
@@ -594,6 +594,8 @@ require('lazy').setup({
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- require('java').setup()
+      -- require('lspconfig').jdtls.setup {}
       require('mason-lspconfig').setup {
         handlers = {
           function(server_name)
@@ -618,7 +620,54 @@ require('lazy').setup({
     end,
   },
 
-  --My Plugins
+  -- My Plugins
+
+  -- SQL QUERYING AND DB
+  -- require 'lua.kickstart.plugins.dadbod'
+  --TESTING -> NOT NEEDED AND NOT WORKING
+  -- {
+  --   'tpope/vim-cucumber',
+  -- },
+  --
+  --JAVA  -> Does Everything
+  -- {
+  --   'nvim-java/nvim-java',
+  --   dependencies = {
+  --     'nvim-java/lua-async-await',
+  --     'nvim-java/nvim-java-core',
+  --     'nvim-java/nvim-java-test',
+  --     'nvim-java/nvim-java-dap',
+  --     'nvim-java/nvim-java-refactor',
+  --     'MunifTanjim/nui.nvim',
+  --     'neovim/nvim-lspconfig',
+  --     'mfussenegger/nvim-dap',
+  --     {
+  --       'williamboman/mason.nvim',
+  --       opts = {
+  --         registries = {
+  --           'github:nvim-java/mason-registry',
+  --           'github:mason-org/mason-registry',
+  --         },
+  --       },
+  --     },
+  --   },
+  -- },
+  --JAVA LSP
+  {
+    'mfussenegger/nvim-jdtls',
+  },
+
+  --CODE SMELL
+  -- {
+  --   'philwi/nvim-code-smell',
+  --   config = function()
+  --     require('nvim-code-smell').setup()
+  --     outputs = {
+  --       'quickfix',
+  --     }
+  --     vim.keymap.set('n', '<leader>zs', ':RunDiagnostic<CR>', { desc = 'Code [S]mell' })
+  --   end,
+  -- },
 
   --GIT BLAME
   {
@@ -658,6 +707,7 @@ require('lazy').setup({
     enabled = true,
     opts = {
       skip_filetypes = {},
+      ignored_keys = { 'u', '<C-r>' },
     },
     config = function()
       vim.keymap.set({ 'n', 'v' }, '<leader>zc', require('stay-centered').toggle, { desc = '[C]entered-Nvim: Toggle (stay-centered.nvim)' })
@@ -674,6 +724,9 @@ require('lazy').setup({
       local harpoonui = require 'harpoon.ui'
       -- local harpoon = require 'harpoon.mark'
       require('harpoon').setup {
+        menu = {
+          width = vim.api.nvim_win_get_width(0) - 4,
+        },
         vim.keymap.set('n', '<leader>hm', ":lua require('harpoon.mark').add_file()<CR>", { desc = 'Harpoon [M]ark' }),
         vim.keymap.set('n', '<leader>hf', ":lua require('harpoon.ui').toggle_quick_menu()<CR>", { desc = 'Harpoon [F]ind in Buffer' }),
         vim.keymap.set('n', '<leader>h1', ":lua require('harpoon.ui').nav_file(1)<CR>", { desc = 'Harpoon to File: [1]' }),
@@ -1031,7 +1084,8 @@ require('lazy').setup({
 
     config = function()
       require('nvim-tree').setup {
-        vim.keymap.set('n', '<leader>e', ':NvimTreeToggle<CR>', { desc = 'File [E]xplorer' }),
+        vim.keymap.set('n', '<leader>e', '::NvimTreeFindFileToggle<CR>', { desc = 'File [E]xplorer' }),
+        -- vim.keymap.set('n', '<leader>ef', ':NvimTreeFindFile<CR>', { desc = 'Open Tree at Current [F]ile' }),
         view = {
           width = 60,
         },
@@ -1047,11 +1101,6 @@ require('lazy').setup({
       require('autoclose').setup()
     end,
   },
-
-  -- DEBUGGER:
-  { 'mfussenegger/nvim-jdtls', dependencies = {
-    'mfussenegger/nvim-dap',
-  } },
 
   { -- Autoformat
     'stevearc/conform.nvim',
