@@ -1024,9 +1024,12 @@ require('lazy').setup({
     dependencies = { 'nvim-tree/nvim-web-devicons' },
     config = function()
       require('lualine').setup {
-        options = { theme = 'gruvbox' },
+        options = {
+          theme = 'gruvbox',
+          icons_enabled = true,
+        },
         sections = {
-          lualine_a = { { 'filename', path = 1 } },
+          lualine_a = { { 'filename', path = 0 } },
         },
       }
     end,
@@ -1077,17 +1080,22 @@ require('lazy').setup({
     vim.keymap.set('n', '<leader>T', '<CMD>lua require("FTerm").toggle()<CR>', { desc = '[T]erminal' }),
     vim.keymap.set('t', '<leader>T', '<C-\\><C-n><CMD>lua require("FTerm").toggle()<CR>'),
   },
-  --TREE FILE EXPLORER
+  --NVIMTREE
   {
     'nvim-tree/nvim-tree.lua',
     opts = {},
 
     config = function()
+      vim.keymap.set('n', '<leader>e', '::NvimTreeFindFileToggle<CR>', { desc = 'File [E]xplorer' })
       require('nvim-tree').setup {
-        vim.keymap.set('n', '<leader>e', '::NvimTreeFindFileToggle<CR>', { desc = 'File [E]xplorer' }),
-        -- vim.keymap.set('n', '<leader>ef', ':NvimTreeFindFile<CR>', { desc = 'Open Tree at Current [F]ile' }),
         view = {
-          width = 60,
+          width = 100,
+          float = {
+            enable = false,
+          },
+        },
+        renderer = {
+          root_folder_modifier = ':t',
         },
       }
     end,
